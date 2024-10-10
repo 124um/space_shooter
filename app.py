@@ -31,6 +31,10 @@ powerup_image = pygame.transform.scale(powerup_image, (tile_width, tile_height))
 star_image = pygame.image.load('./resources/star.png')
 star_image = pygame.transform.scale(star_image, (tile_width, tile_height))
 
+# Load a sound file (make sure the path is correct)
+laser_sound = pygame.mixer.Sound('./resources/retro-laser.mp3')  # Use your own sound file path
+bg_sound = pygame.mixer.Sound('./resources/bg_music.mp3')  # Use your own sound file path
+
 # Player ship settings
 PLAYER_SPEED = 5
 
@@ -82,6 +86,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        laser_sound.play()
 
     def update(self):
         self.rect.y -= BULLET_SPEED
@@ -199,7 +204,7 @@ while running:
     # Display game over message
     if game_over:
         font = pygame.font.SysFont(None, 72)
-        game_over_text = font.render("GAME OVER", True, WHITE)
+        game_over_text = font.render("you are a poop", True, WHITE)
         screen.blit(game_over_text, (SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 50))
 
     # Display "You Win!" message
