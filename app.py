@@ -51,8 +51,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Space Shooter")
 
 def generate_random_size(image):
-    w_rand_s = random.randint(1, 4)
-    h_rand_s = random.randint(1, 4)
+    w_rand_s = random.randint(1, 2)
+    h_rand_s = random.randint(1, 2)
     return pygame.transform.scale(image, (tile_width * w_rand_s, tile_height * h_rand_s))
 
 # Player class
@@ -93,6 +93,9 @@ class Bullet(pygame.sprite.Sprite):
         if self.rect.y < 0:
             self.kill()
 
+def enemy_speed_rnd():
+    return random.randint(1, 3)
+
 # Enemy class
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, enemy_type):
@@ -107,10 +110,12 @@ class Enemy(pygame.sprite.Sprite):
         self.enemy_type = enemy_type
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
-        self.rect.y = random.randint(50, 150)
+        self.rect.y = 0
+
+
 
     def update(self):
-        self.rect.y += ENEMY_SPEED
+        self.rect.y += enemy_speed_rnd()
         if self.rect.y > SCREEN_HEIGHT:
             self.kill()
 
@@ -120,8 +125,8 @@ class Star(pygame.sprite.Sprite):
         super().__init__()
         self.image = star_image
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, SCREEN_WIDTH - tile_width)
-        self.rect.y = random.randint(50, 150)
+        self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
+        self.rect.y = SCREEN_HEIGHT - 50
 
 # Sprite groups
 all_sprites = pygame.sprite.Group()
@@ -178,11 +183,11 @@ while running:
             hit_list = pygame.sprite.spritecollide(bullet, enemies, True)
             for hit in hit_list:
                 if hit.enemy_type in ["asteroid", "stone"]:
-                    score += 1  # Increment score for hitting asteroid or stone
+                    score += 1  # Increment score for hitting asteroid or stone                    
                 bullet.kill()  # Destroy the bullet after collision
 
         # Create a star if the score reaches 30
-        if score == 30 and not star_group:
+        if score == 10 and not star_group:
             star = Star()
             all_sprites.add(star)
             star_group.add(star)
